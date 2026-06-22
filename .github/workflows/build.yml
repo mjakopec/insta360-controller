@@ -51,8 +51,11 @@ jobs:
             -Pandroid.injected.signing.key.alias=release \
             -Pandroid.injected.signing.key.password=android123
 
+      - name: Find APK
+        run: find android/app/build/outputs -name "*.apk" 2>/dev/null || echo "No APK found"
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: juras-app
-          path: android/app/build/outputs/apk/release/app-release.apk
+          path: android/app/build/outputs/apk/**/*.apk
