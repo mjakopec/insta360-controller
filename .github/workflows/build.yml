@@ -34,6 +34,19 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
+      - name: Allow HTTP traffic to camera
+        run: |
+          mkdir -p android/app/src/main/res/xml
+          cat > android/app/src/main/res/xml/network_security_config.xml << 'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <network-security-config>
+              <domain-config cleartextTrafficPermitted="true">
+                  <domain includeSubdomains="true">192.168.42.1</domain>
+              </domain-config>
+          </network-security-config>
+          EOF
+          sed -i 's|<application|<application android:networkSecurityConfig="@xml/network_security_config"|' android/app/src/main/AndroidManifest.xml
+
       - name: Generate keystore
         run: |
           keytool -genkey -v \
